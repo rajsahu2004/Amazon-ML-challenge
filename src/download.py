@@ -1,6 +1,11 @@
 import pandas as pd
 import os
 
+# run nohup python src/dowload.py &
+# to download images in the background
+# to check the disk image run du -sh
+# to check the number of images run ls -l | wc -l
+
 DATASET_FOLDER = 'dataset/'
 train = pd.read_csv(os.path.join(DATASET_FOLDER, 'train.csv'))
 test = pd.read_csv(os.path.join(DATASET_FOLDER, 'test.csv'))
