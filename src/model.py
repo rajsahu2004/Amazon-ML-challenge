@@ -1,17 +1,16 @@
-import torch.nn as nn
 import torch
+import torch.nn as nn
 from torchvision import models
-from torch import optim
 
 class EntityExtractorModel(nn.Module):
-    def _init_(self, num_units):
-        super(EntityExtractorModel, self)._init_()
+    def __init__(self, num_units):
+        super(EntityExtractorModel, self).__init__()
         # Load a pre-trained ResNet model
         self.cnn = models.resnet50(pretrained=True)
         self.cnn.fc = nn.Identity()  # Remove the fully connected layer, we’ll define our own
         
         # Fully connected layers
-        self.fc1 = nn.Linear(2048, 512)  # Assuming ResNet50
+        self.fc1 = nn.Linear(2048, 512)  # Assuming ResNet50 output size
         self.fc2 = nn.Linear(512, 256)
         
         # Two outputs: one for numeric value, one for unit classification
@@ -30,16 +29,3 @@ class EntityExtractorModel(nn.Module):
         unit = self.unit_output(x)
         
         return value, unit
-
-# Get the number of unique units for classification
-num_units = len(data_new['unit'].unique())
-
-# Initialize the model
-model = EntityExtractorModel(num_units=num_units)
-
-# Loss functions
-mse_loss = nn.MSELoss()  # For numeric value prediction
-cross_entropy_loss = nn.CrossEntropyLoss()  # For unit classification
-
-# Optimizer
-optimizer = optim.Adam(model.parameters(), lr=0.001)
